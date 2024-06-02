@@ -1,3 +1,5 @@
+version: "3.1"
+
 services:
   db:
     image: postgres
@@ -16,7 +18,7 @@ services:
     secrets:
       - db-password
     volumes:
-      - db-data:/var/lib/personal-inventory-postgresql
+      - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=personal-inventory-db
       - POSTGRES_USER=personal-inventory-user
