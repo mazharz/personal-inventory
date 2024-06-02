@@ -1,0 +1,73 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: personal-inventory-postgresql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U personal-inventory-user -d personal-inventory-db",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/personal-inventory-postgresql
+    environment:
+      - POSTGRES_DB=personal-inventory-db
+      - POSTGRES_USER=personal-inventory-user
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    networks:
+      - backnet
+    expose:
+      - 5432
+
+  backend:
+    build:
+      context: backend
+    restart: always
+    container_name: personal-inventory-backend
+    secrets:
+      - db-password
+    volumes:
+      - ./backend/src/:/app/src
+    ports:
+      - 3000:3000
+    networks:
+      - backnet
+    depends_on:
+      db:
+        condition: service_healthy
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: personal-inventory-pgadmin
+    secrets:
+      - pgadmin-password
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD_FILE=/run/secrets/pgadmin-password
+    ports:
+      - 3001:80
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - backnet
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: db/password.txt
+  pgadmin-password:
+    file: db/pgadmin-password.txt
+
+networks:
+  backnet:
