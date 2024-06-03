@@ -54,6 +54,10 @@ services:
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD_FILE=/run/secrets/pgadmin-password
+      - PGADMIN_SERVER_JSON_FILE=/run/pgadmin-files/pgadmin-db.json
+      # - PGADMIN_PREFERENCES_JSON_FILE=/run/pgadmin-files/pgadmin-preferences.json
+    volumes:
+      - ./db/pgadmin-files:/run/pgadmin-files
     ports:
       - 3001:80
     depends_on:
