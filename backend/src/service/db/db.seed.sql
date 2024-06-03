@@ -1,5 +1,6 @@
-drop table item if exists;
-drop table category if exists;
+drop table if exists item;
+
+drop table if exists category;
 
 create table category (
 	id serial primary key,
