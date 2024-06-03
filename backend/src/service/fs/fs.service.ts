@@ -1,8 +1,8 @@
 import { readFile } from 'fs/promises';
-import { InternalResponse } from '../../type/utils';
+import { Result } from '../../type/utils';
 
 class FileSystemService {
-  async readFile(path: string): Promise<InternalResponse<string>> {
+  async readFile(path: string): Promise<Result<string>> {
     try {
       const result = await readFile(path);
       return {

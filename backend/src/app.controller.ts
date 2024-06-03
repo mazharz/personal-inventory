@@ -1,9 +1,9 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Post('seed')
   async seedDatabase() {
@@ -14,10 +14,5 @@ export class AppController {
     }
 
     return result;
-  }
-
-  @Get()
-  async getHello(): Promise<string> {
-    return await this.appService.getHello();
   }
 }

@@ -1,3 +1,6 @@
+drop table item if exists;
+drop table category if exists;
+
 create table category (
 	id serial primary key,
 	name varchar(250) not null,

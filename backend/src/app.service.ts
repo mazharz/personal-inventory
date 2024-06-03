@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from './service/db/db.service';
 import { FileSystemService } from './service/fs/fs.service';
-import { InternalResponse } from './type/utils';
+import { Result } from './type/utils';
 
 @Injectable()
 export class AppService {
   constructor(
     private readonly database: DatabaseService,
     private readonly fileSystem: FileSystemService,
-  ) {}
+  ) { }
 
-  async seedDatabase(): Promise<InternalResponse> {
+  async seedDatabase(): Promise<Result> {
     try {
       const seedQueryString = await this.fileSystem.readFile(
         `${__dirname}/../src/service/db/db.seed.sql`,

@@ -7,9 +7,9 @@ class DatabaseService {
     this.pool = new Pool();
   }
 
-  async query(sql: string, values?: unknown[]) {
+  async query<T>(sql: string, values?: unknown[]): Promise<T> {
     const res = await this.pool.query(sql, values);
-    return res.rows;
+    return res.rows as T;
   }
 }
 
