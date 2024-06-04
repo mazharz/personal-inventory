@@ -29,6 +29,8 @@ describe('CategoryController', () => {
 
     controller = module.get<CategoryController>(CategoryController);
     service = module.get<CategoryService>(CategoryService);
+
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -65,6 +67,137 @@ describe('CategoryController', () => {
       expect(resMock.send).toHaveBeenCalledWith({
         success: false,
         message: String(error),
+      });
+    });
+
+    describe('findOne', () => {
+      it('should return valid object if all is well', async () => {
+        const mockData = {
+          success: true,
+          data: SAMPLE_CATEGORY,
+        };
+        jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
+
+        await controller.findOne(resMock, '1');
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.OK);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should return invalid response if id is not provided', async () => {
+        const mockData = {
+          success: false,
+          message: 'You must provide a valid id.',
+        };
+        jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
+
+        await controller.findOne(resMock, undefined);
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should return invalid response if id is not number', async () => {
+        const mockData = {
+          success: false,
+          message: 'You must provide a valid id.',
+        };
+        jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
+
+        await controller.findOne(resMock, 'not-a-number');
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+    });
+
+    describe('create', () => {
+      it('should create new category if all is well', async () => {
+        const mockData = { success: true };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, { name: 'name', parent_id: 1 });
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.OK);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should create new category if parent_id is null', async () => {
+        const mockData = { success: true };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, { name: 'name', parent_id: null });
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.OK);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should fail if there is no payload', async () => {
+        const mockData = {
+          success: false,
+          message: 'Make sure you provide a payload.',
+        };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, undefined);
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should fail if name is not given', async () => {
+        const mockData = {
+          success: false,
+          message: 'Make sure you provide a valid category name.',
+        };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, { parent_id: 1 } as any);
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should fail if name has zero length', async () => {
+        const mockData = {
+          success: false,
+          message: 'Make sure you provide a valid category name.',
+        };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, { name: '', parent_id: 1 } as any);
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should fail if parent_id is not given', async () => {
+        const mockData = {
+          success: false,
+          message: 'Make sure you provide a valid category parent_id.',
+        };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, { name: 'name' } as any);
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
+      });
+
+      it('should fail if parent_id is not a number', async () => {
+        const mockData = {
+          success: false,
+          message: 'Make sure you provide a valid category parent_id.',
+        };
+        jest.spyOn(service, 'create').mockResolvedValue(mockData);
+
+        await controller.create(resMock, {
+          name: 'name',
+          parent_id: 'string-here' as any as number,
+        });
+
+        expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+        expect(resMock.send).toHaveBeenCalledWith(mockData);
       });
     });
   });

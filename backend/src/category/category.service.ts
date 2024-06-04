@@ -7,10 +7,33 @@ import { DatabaseService } from '../service/db/db.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly database: DatabaseService) { }
+  constructor(private readonly database: DatabaseService) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  async create(createCategoryDto: CreateCategoryDto): Promise<Result> {
+    try {
+      await this.database.query<any>(
+        'INSERT INTO category (name, parent_id) VALUES ($1, $2)',
+        [createCategoryDto.name, createCategoryDto.parent_id],
+      );
+
+      return { success: true };
+    } catch (error) {
+      // foreign key constraint error
+      if (error.code === '23503') {
+        return {
+          success: false,
+          message: `You are referencing a non-existent database object: "${error.constraint}"`,
+        };
+      }
+      // not null constraint error
+      if (error.code === '23502') {
+        return {
+          success: false,
+          message: `Column "${error.column}" cannot be null.`,
+        };
+      }
+      throw error;
+    }
   }
 
   async findAll(): Promise<Result<Category[]>> {
@@ -28,8 +51,27 @@ export class CategoryService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number): Promise<Result<Category>> {
+    try {
+      const result = await this.database.query<Category>(
+        'SELECT * FROM category WHERE id = $1',
+        [id],
+      );
+
+      if (result && result[0]) {
+        return {
+          success: true,
+          data: result[0],
+        };
+      }
+
+      return {
+        success: true,
+        data: null,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   update(id: number, updateCategoryDto: UpdateCategoryDto) {
