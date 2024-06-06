@@ -10,8 +10,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategorySchema, CreateCategoryDto } from './dto/create-category.dto';
+// import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Response } from 'express';
 
 @Controller('category')
@@ -23,25 +23,11 @@ export class CategoryController {
     @Res() res: Response,
     @Body() createCategoryDto: CreateCategoryDto,
   ) {
-    if (!createCategoryDto || Object.keys(createCategoryDto).length === 0) {
+    const parseResults = CategorySchema.safeParse(createCategoryDto);
+    if (!parseResults.success) {
       return res.status(HttpStatus.BAD_REQUEST).send({
         success: false,
-        message: 'Make sure you provide a payload.',
-      });
-    }
-    if (!createCategoryDto.name || !createCategoryDto.name.length) {
-      return res.status(HttpStatus.BAD_REQUEST).send({
-        success: false,
-        message: 'Make sure you provide a valid category name.',
-      });
-    }
-    if (
-      createCategoryDto.parent_id === undefined ||
-      Number.isNaN(Number(createCategoryDto.parent_id))
-    ) {
-      return res.status(HttpStatus.BAD_REQUEST).send({
-        success: false,
-        message: 'Make sure you provide a valid category parent_id.',
+        message: parseResults.error.errors[0].message,
       });
     }
 
@@ -75,13 +61,13 @@ export class CategoryController {
     res.status(HttpStatus.OK).send(result);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoryService.update(+id, updateCategoryDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateCategoryDto: UpdateCategoryDto,
+  // ) {
+  //   return this.categoryService.update(+id, updateCategoryDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

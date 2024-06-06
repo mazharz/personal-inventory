@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+// import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Result } from '../type/utils';
 import { Category } from './entities/category.entity';
 import { DatabaseService } from '../service/db/db.service';
@@ -17,7 +17,7 @@ export class CategoryService {
       );
 
       return { success: true };
-    } catch (error) {
+    } catch (error: any) {
       // foreign key constraint error
       if (error.code === '23503') {
         return {
@@ -74,9 +74,9 @@ export class CategoryService {
     }
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
+  // update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  //   return `This action updates a #${id} category`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} category`;

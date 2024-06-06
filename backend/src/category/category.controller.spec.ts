@@ -161,7 +161,7 @@ describe('CategoryController', () => {
       it('should fail if name has zero length', async () => {
         const mockData = {
           success: false,
-          message: 'Make sure you provide a valid category name.',
+          message: 'Make sure name is not empty.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
 
