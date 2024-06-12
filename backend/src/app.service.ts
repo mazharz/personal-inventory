@@ -18,7 +18,7 @@ export class AppService {
       if (!seedQueryString.success) return seedQueryString;
 
       await this.database.query(seedQueryString.data);
-      return { success: true };
+      return { success: true, data: undefined };
     } catch (error) {
       console.log(error);
       return {

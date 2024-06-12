@@ -7,7 +7,7 @@ import { DatabaseService } from '../service/db/db.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(private readonly database: DatabaseService) { }
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Result> {
     try {
@@ -16,7 +16,7 @@ export class CategoryService {
         [createCategoryDto.name, createCategoryDto.parent_id],
       );
 
-      return { success: true };
+      return { success: true, data: undefined };
     } catch (error: any) {
       // foreign key constraint error
       if (error.code === '23503') {

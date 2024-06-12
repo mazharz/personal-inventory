@@ -1,5 +1,3 @@
-export type Result<T = unknown> = {
-  success: boolean;
-  message?: string;
-  data?: T;
-};
+export type Result<T = unknown> =
+  | { success: true; data: T }
+  | { success: false; message: string };

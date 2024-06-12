@@ -88,7 +88,7 @@ describe('CategoryService', () => {
 
   describe('create', () => {
     it('should store the new category if all is well', async () => {
-      const mockData = { success: true };
+      const mockData = { success: true, data: undefined };
       jest.spyOn(database, 'query').mockResolvedValue([]);
 
       const result = await service.create({ name: 'name', parent_id: 1 });

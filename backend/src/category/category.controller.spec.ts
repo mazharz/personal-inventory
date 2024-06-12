@@ -40,7 +40,7 @@ describe('CategoryController', () => {
   describe('findAll', () => {
     it('should return received data with ok status', async () => {
       const mockData = {
-        success: true,
+        success: true as const,
         data: [SAMPLE_CATEGORY, SAMPLE_CATEGORY],
       };
       jest
@@ -73,7 +73,7 @@ describe('CategoryController', () => {
     describe('findOne', () => {
       it('should return valid object if all is well', async () => {
         const mockData = {
-          success: true,
+          success: true as const,
           data: SAMPLE_CATEGORY,
         };
         jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
@@ -86,7 +86,7 @@ describe('CategoryController', () => {
 
       it('should return invalid response if id is not provided', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'You must provide a valid id.',
         };
         jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
@@ -99,7 +99,7 @@ describe('CategoryController', () => {
 
       it('should return invalid response if id is not number', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'You must provide a valid id.',
         };
         jest.spyOn(service, 'findOne').mockResolvedValue(mockData);
@@ -113,7 +113,7 @@ describe('CategoryController', () => {
 
     describe('create', () => {
       it('should create new category if all is well', async () => {
-        const mockData = { success: true };
+        const mockData = { success: true as const, data: undefined };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
 
         await controller.create(resMock, { name: 'name', parent_id: 1 });
@@ -123,7 +123,7 @@ describe('CategoryController', () => {
       });
 
       it('should create new category if parent_id is null', async () => {
-        const mockData = { success: true };
+        const mockData = { success: true as const, data: undefined };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
 
         await controller.create(resMock, { name: 'name', parent_id: null });
@@ -134,7 +134,7 @@ describe('CategoryController', () => {
 
       it('should fail if there is no payload', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'Make sure you provide a payload.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
@@ -147,7 +147,7 @@ describe('CategoryController', () => {
 
       it('should fail if name is not given', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'Make sure you provide a valid category name.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
@@ -160,7 +160,7 @@ describe('CategoryController', () => {
 
       it('should fail if name has zero length', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'Make sure name is not empty.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
@@ -173,7 +173,7 @@ describe('CategoryController', () => {
 
       it('should fail if parent_id is not given', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'Make sure you provide a valid category parent_id.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
@@ -186,7 +186,7 @@ describe('CategoryController', () => {
 
       it('should fail if parent_id is not a number', async () => {
         const mockData = {
-          success: false,
+          success: false as const,
           message: 'Make sure you provide a valid category parent_id.',
         };
         jest.spyOn(service, 'create').mockResolvedValue(mockData);
