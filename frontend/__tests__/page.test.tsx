@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import App from "@/app/page";
 
-describe("Page", () => {
+describe("/", () => {
   it("should render the heading", () => {
     render(<App />);
 
